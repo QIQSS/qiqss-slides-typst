@@ -16,7 +16,7 @@
 
 #title-slide()
 
-#outline-slide(title: [Presentation outline])
+#outline-slide()
 
 = First section
 
@@ -27,14 +27,6 @@ kajsfsdkjfl
 = Second section
 
 == Second slide
-
-= kdjfds
-
-= dhjfksjdf
-
-= jkdsjfsl
-
-= kdsjfkjs
 
 ksghlksjgs
 

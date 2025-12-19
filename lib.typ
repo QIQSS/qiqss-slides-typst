@@ -95,16 +95,12 @@
   touying-slide(self: self, body)
 })
 
-#let outline-slide(title: none) = touying-slide-wrapper(self => {
+#let outline-slide() = touying-slide-wrapper(self => {
   let header(self) = {
     set align(horizon)
     set text(size: 1.5em)
     show: pad.with(.7em)
-    if title == none {
-      utils.call-or-display(self, self.store.outline-title)
-    } else {
-      utils.call-or-display(self, title)
-    }
+    utils.call-or-display(self, self.store.outline-title)
   }
   set align(horizon)
   self = utils.merge-dicts(
@@ -112,6 +108,9 @@
     config-page(
       fill: self.colors.neutral-light,
       header: header,
+    ),
+    config-common(
+      freeze-slide-counter: true,
     ),
   )
   touying-slide(
@@ -132,27 +131,27 @@
   )
 })
 
-// New section title slides
-// #let new-section-slide(level) = touying-slide-wrapper(self => {
-//   let body = [
-//     #set align(center + horizon)
-//     #v(1fr)
-//     #text(
-//       size: 1.5em,
-//       utils.display-current-heading(level: 1),
-//     )
-//     #v(1fr)
-//   ]
-//   let footer = {
-//     show: components.cell.with(fill: self.colors.primary-darker)
-//   }
-//   self = utils.merge-dicts(
-//     self,
-//     config-common(freeze-slide-counter: true),
-//     config-page(footer: footer, margin: (bottom: 50%)),
-//   )
-//   touying-slide(self: self, body)
-// })
+#let section-title-slide() = touying-slide-wrapper(self => {
+  let body = [
+    #set align(center + horizon)
+    #v(1fr)
+    #text(
+      size: 1.5em,
+      utils.display-current-heading(level: 1),
+    )
+    #v(1fr)
+  ]
+  let footer = {
+    show: components.cell.with(fill: self.colors.primary-darker)
+  }
+  self = utils.merge-dicts(
+    self,
+    config-common(freeze-slide-counter: true),
+    config-page(footer: footer, margin: (bottom: 50%)),
+  )
+  touying-slide(self: self, body)
+})
+
 #let new-section-slide(level) = outline-slide()
 
 #let end-slide(body: none) = touying-slide-wrapper(self => {
@@ -174,8 +173,8 @@
   if footer not in ("author", "institution", "conference") {
     panic("Either 'author' or 'institution'")
   }
-  if new-section-type not in ("outline", "section") {
-    panic("Either 'outline' or 'section'")
+  if new-section-type not in ("outline", "section", none) {
+    panic("Either 'outline', 'section' or none")
   }
   set text(font: "IBM Plex Sans", size: 16pt)
   show math.equation: set text(font: "New Computer Modern Math")
