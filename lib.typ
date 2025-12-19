@@ -1,4 +1,4 @@
-#import "@preview/touying:0.6.1": *
+#import "@preview/touying:0.5.5": *
 
 // Slide
 //
@@ -8,7 +8,7 @@
   let header(self) = {
     set align(horizon)
     set text(size: 1.5em)
-    show: pad.with(.5em)
+    show: pad.with(.7em)
     utils.display-current-heading(level: 2)
   }
   let footer(self) = {
@@ -81,7 +81,7 @@
       v(.75em)
     }
     #utils.display-info-date(self)
-    #v(.5fr)
+    #v(.75fr)
   ]
   self = utils.merge-dicts(
     self,
@@ -95,48 +95,94 @@
   touying-slide(self: self, body)
 })
 
-// New section title slides
-#let new-section-slide(level) = touying-slide-wrapper(self => {
-  let body = [
-    #set align(center + horizon)
-    #v(1fr)
-    #text(
-      size: 1.5em,
-      utils.display-current-heading(level: 1),
-    )
-    #v(1fr)
-  ]
-  let footer = {
-    show: components.cell.with(fill: self.colors.primary-darker)
+#let outline-slide(title: none) = touying-slide-wrapper(self => {
+  let header(self) = {
+    set align(horizon)
+    set text(size: 1.5em)
+    show: pad.with(.7em)
+    if title == none {
+      utils.call-or-display(self, self.store.outline-title)
+    } else {
+      utils.call-or-display(self, title)
+    }
   }
+  set align(horizon)
+  self = utils.merge-dicts(
+    self,
+    config-page(
+      fill: self.colors.neutral-light,
+      header: header,
+    ),
+  )
+  touying-slide(
+    self: self,
+    components.adaptive-columns(
+      text(
+        weight: "medium",
+        size: 1.2em,
+        components.custom-progressive-outline(
+          self: self,
+          depth: 1,
+          alpha: 30%,
+          indent: (0em,),
+          vspace: (.5em,),
+        ),
+      ),
+    ),
+  )
+})
+
+// New section title slides
+// #let new-section-slide(level) = touying-slide-wrapper(self => {
+//   let body = [
+//     #set align(center + horizon)
+//     #v(1fr)
+//     #text(
+//       size: 1.5em,
+//       utils.display-current-heading(level: 1),
+//     )
+//     #v(1fr)
+//   ]
+//   let footer = {
+//     show: components.cell.with(fill: self.colors.primary-darker)
+//   }
+//   self = utils.merge-dicts(
+//     self,
+//     config-common(freeze-slide-counter: true),
+//     config-page(footer: footer, margin: (bottom: 50%)),
+//   )
+//   touying-slide(self: self, body)
+// })
+#let new-section-slide(level) = outline-slide()
+
+#let end-slide(body: none) = touying-slide-wrapper(self => {
   self = utils.merge-dicts(
     self,
     config-common(freeze-slide-counter: true),
-    config-page(footer: footer, margin: (bottom: 50%), fill: self.colors.neutral-light),
   )
-  touying-slide(self: self, body)
-})
-
-#let end-slide(body: none) = touying-slide-wrapper(self => {
-  let self = utils.merge-dicts()
   touying-slide(self: self, body)
 })
 
 #let qiqss-theme(
   aspect-ratio: "16-9",
   footer: "author",
+  outline-title: "Presentation outline",
+  new-section-type: "outline",
   ..args,
   body,
 ) = {
   if footer not in ("author", "institution", "conference") {
-    panic("Either author or institution")
+    panic("Either 'author' or 'institution'")
+  }
+  if new-section-type not in ("outline", "section") {
+    panic("Either 'outline' or 'section'")
   }
   set text(font: "IBM Plex Sans", size: 16pt)
   show math.equation: set text(font: "New Computer Modern Math")
   show: touying-slides.with(
     config-page(
       paper: "presentation-" + aspect-ratio,
-      margin: (x: 1.5em, top: 4em, bottom: 1.5em),
+      margin: (x: 2.5em, top: 5em, bottom: 1.5em),
     ),
     config-common(
       slide-fn: slide,
@@ -154,6 +200,8 @@
     ),
     config-store(
       footer: footer,
+      outline-title: outline-title,
+      new-section-type: new-section-type,
     ),
     ..args,
   )

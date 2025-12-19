@@ -3,6 +3,7 @@
 #show: qiqss-theme.with(
   aspect-ratio: "16-9",
   footer: "conference",
+  // outline-title: [Outline],
   config-info(
     title: [Presentation title],
     author: [Yannick Lapointe],
@@ -15,7 +16,7 @@
 
 #title-slide()
 
-// #outline-slide()
+#outline-slide(title: [Presentation outline])
 
 = First section
 
@@ -27,8 +28,16 @@ kajsfsdkjfl
 
 == Second slide
 
-dksghlksjgs
+= kdjfds
 
-// #end-slide(
-//   body: [],
-// )
+= dhjfksjdf
+
+= jkdsjfsl
+
+= kdsjfkjs
+
+ksghlksjgs
+
+#end-slide(
+  body: [Thanks! Questions?],
+)
