@@ -3,22 +3,19 @@
 #show: qiqss-theme.with(
   aspect-ratio: "16-9",
   footer: "conference",
-  // outline-title: [Outline],
-  new-section-style: "title",
+  outline-title: [Outline],
+  new-section-style: "outline",
   config-info(
     title: [Presentation title],
-    author: [Yannick Lapointe],
+    author: [Author Name],
     date: datetime.today().display(),
     authors: ([Author One], [Author Two], [Author Three]),
-    institution: [Institut Quantique],
-    conference: [APS March Meeting 2026],
+    institution: [Institution],
+    conference: [Conference Lambda],
   ),
   logos: (
-    image("Logos/CRSNG/CRSNG_IMPRESSION/svg/CRSNG_CMYK.svg", height: 2em),
-    image("Logos/FRQ_vectoriel.svg", height: 2em),
-    image("Logos/3iT_logo_h_rgb_hr.png", height: 2em),
-    image("assets/institut-quantique-STD-degrade.svg", height: 2em),
     image("assets/UdeS_logo_h_rgb.svg", height: 2em),
+    image("assets/institut-quantique-STD-degrade.svg", height: 2em),
   ),
   // num-logos-per-row: 4,
 )
@@ -31,16 +28,12 @@
 
 == First slide
 
-kajsfsdkjfl
-
-// == Other slide
-
-
+- This is some content on the first slide.
 
 = Second section
 
 == Second slide
 
-ksghlksjgs
+- This is some other content on the second slide.
 
 #end-slide[Thanks! Questions?]

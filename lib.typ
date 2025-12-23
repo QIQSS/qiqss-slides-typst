@@ -42,7 +42,10 @@
     grid(
       align: (left, right),
       columns: (1fr, 1fr),
-      utils.display-current-heading(level: 2), image("assets/QIQSS_logo_v3.svg", height: 1em),
+      utils.display-current-heading(
+        level: 2,
+      ),
+      image("assets/QIQSS_logo_v3.svg", height: 1em),
     )
   }
   let footer(self) = {
@@ -127,15 +130,18 @@
 })
 
 
-// Outline slide
-//
-// Adds a slide showing the outline of the sections of the presentation
-#let outline-slide() = touying-slide-wrapper(self => {
+
+// Outline slide content
+#let custom-outline(self) = {
   let header(self) = {
     set align(horizon)
     set text(size: 1.5em)
     show: pad.with(.7em)
-    utils.call-or-display(self, self.store.outline-title)
+    grid(
+      align: (left, right),
+      columns: (1fr, 1fr),
+      utils.call-or-display(self, self.store.outline-title), image("assets/QIQSS_logo_v3.svg", height: 1em),
+    )
   }
   set align(horizon)
   self = utils.merge-dicts(
@@ -155,15 +161,23 @@
         weight: "medium",
         size: 1.2em,
         components.custom-progressive-outline(
-          self: self,
           depth: 1,
           alpha: 30%,
           indent: (0em,),
           vspace: (.5em,),
+          numbered: (true,),
         ),
       ),
     ),
   )
+}
+
+
+// Outline slide
+//
+// Adds a slide showing the outline of the sections of the presentation
+#let outline-slide() = touying-slide-wrapper(self => {
+  custom-outline(self)
 })
 
 
@@ -177,39 +191,7 @@
 // This option is specified by the new-section-style argument of the qiqss-theme function.
 #let new-section-slide(level) = touying-slide-wrapper(self => {
   if self.store.new-section-style == "outline" {
-    let header(self) = {
-      set align(horizon)
-      set text(size: 1.5em)
-      show: pad.with(.7em)
-      utils.call-or-display(self, self.store.outline-title)
-    }
-    set align(horizon)
-    self = utils.merge-dicts(
-      self,
-      config-page(
-        fill: self.colors.neutral-light,
-        header: header,
-      ),
-      config-common(
-        freeze-slide-counter: true,
-      ),
-    )
-    touying-slide(
-      self: self,
-      components.adaptive-columns(
-        text(
-          weight: "medium",
-          size: 1.2em,
-          components.custom-progressive-outline(
-            self: self,
-            depth: 1,
-            alpha: 30%,
-            indent: (0em,),
-            vspace: (.5em,),
-          ),
-        ),
-      ),
-    )
+    custom-outline(self)
   } else if self.store.new-section-style == "title" {
     let body = [
       #set align(center + horizon)
@@ -243,6 +225,7 @@
 
 // End of presentation slide
 //
+// End slide with some body. The logos are the one specified in the config-store(logos: ()) argument.
 #let end-slide(body) = touying-slide-wrapper(self => {
   self = utils.merge-dicts(
     self,
@@ -291,6 +274,12 @@
 //
 // - new-section-style (str | none): New section slide type. Either "outline", "title" or none. Default is none.
 //
+// - logos (array): Array of images (logos) to add to the title slide and end slide.
+//
+// - num-logos-per-row (int): Number of logos per row on the title slide and end slide.
+//
+// - heading-numbering (string): Heading numbering format.
+//
 // - args: Config dictionaries and other arguments for the touying-slides function.
 #let qiqss-theme(
   aspect-ratio: "16-9",
@@ -299,6 +288,7 @@
   new-section-style: none,
   logos: (),
   num-logos-per-row: 4,
+  heading-numbering: "1.",
   ..args,
   body,
 ) = {
@@ -310,6 +300,7 @@
   }
   set text(font: "IBM Plex Sans", size: 16pt)
   show math.equation: set text(font: "New Computer Modern Math")
+  show heading.where(level: 1): set heading(numbering: heading-numbering)
   show: touying-slides.with(
     config-page(
       paper: "presentation-" + aspect-ratio,
