@@ -1,4 +1,21 @@
 #import "@preview/touying:0.6.1": *
+#import "@preview/pinit:0.2.2": *
+
+
+// Annotating
+#let annotate(pin, pos: bottom + right, body-pos: right, body) = context {
+  let body-width = measure(body).width
+  pinit-point-from(
+    pin,
+    pin-dx: 0em,
+    pin-dy: if pos.y == bottom { 0.5em } else { -1.1em },
+    body-dx: if body-pos.x == left { -body-width } else if body-pos.x == right { 0em } else { -body-width / 2 },
+    body-dy: if pos.y == bottom { .4em } else { -1.1em },
+    offset-dx: if pos.x == left { -2em } else if pos.x == right { 2em } else { 0em },
+    offset-dy: if pos.y == bottom { 2.6em } else { -3em },
+    body,
+  )
+}
 
 
 // Colors
@@ -45,7 +62,11 @@
       utils.display-current-heading(
         level: 2,
       ),
-      image("assets/QIQSS_logo_v3.svg", height: 1em),
+      if self.info.logo != none {
+        self.info.logo
+      } else {
+        image("assets/QIQSS_logo_v3.svg", height: 1em)
+      },
     )
   }
   let footer(self) = {
@@ -90,7 +111,11 @@
   let header = {
     set align(top)
     show: pad.with(1em)
-    image("assets/QIQSS_logo_v3.svg", height: 2.5em)
+    if self.info.logo != none {
+      scale(250%, self.info.logo, reflow: true)
+    } else {
+      image("assets/QIQSS_logo_v3.svg", height: 2.5em)
+    }
   }
   let body = [
     #v(1fr)
@@ -115,7 +140,7 @@
     }
     #utils.display-info-date(self)
     #v(.75fr)
-    #place(bottom + right, display-logos(self.store.logos, self.store.num-logos-per-row))
+    #place(bottom + right, display-logos(self.store.partner-logos, self.store.num-logos-per-row))
   ]
   self = utils.merge-dicts(
     self,
@@ -130,9 +155,10 @@
 })
 
 
-
-// Outline slide content
-#let custom-outline(self) = {
+// Outline slide
+//
+// Adds a slide showing the outline of the sections of the presentation
+#let outline-slide() = touying-slide-wrapper(self => {
   let header(self) = {
     set align(horizon)
     set text(size: 1.5em)
@@ -140,7 +166,12 @@
     grid(
       align: (left, right),
       columns: (1fr, 1fr),
-      utils.call-or-display(self, self.store.outline-title), image("assets/QIQSS_logo_v3.svg", height: 1em),
+      utils.call-or-display(self, self.store.outline-title),
+      if self.info.logo != none {
+        self.info.logo
+      } else {
+        image("assets/QIQSS_logo_v3.svg", height: 1em)
+      },
     )
   }
   set align(horizon)
@@ -160,24 +191,10 @@
       text(
         weight: "medium",
         size: 1.2em,
-        components.custom-progressive-outline(
-          depth: 1,
-          alpha: 30%,
-          indent: (0em,),
-          vspace: (.5em,),
-          numbered: (true,),
-        ),
+        outline(depth: 1, title: none),
       ),
     ),
   )
-}
-
-
-// Outline slide
-//
-// Adds a slide showing the outline of the sections of the presentation
-#let outline-slide() = touying-slide-wrapper(self => {
-  custom-outline(self)
 })
 
 
@@ -191,7 +208,48 @@
 // This option is specified by the new-section-style argument of the qiqss-theme function.
 #let new-section-slide(level) = touying-slide-wrapper(self => {
   if self.store.new-section-style == "outline" {
-    custom-outline(self)
+    let header(self) = {
+      set align(horizon)
+      set text(size: 1.5em)
+      show: pad.with(.7em)
+      grid(
+        align: (left, right),
+        columns: (1fr, 1fr),
+        utils.call-or-display(self, self.store.outline-title),
+        if self.info.logo != none {
+          self.info.logo
+        } else {
+          image("assets/QIQSS_logo_v3.svg", height: 1em)
+        },
+      )
+    }
+    set align(horizon)
+    self = utils.merge-dicts(
+      self,
+      config-page(
+        fill: self.colors.neutral-light,
+        header: header,
+      ),
+      config-common(
+        freeze-slide-counter: true,
+      ),
+    )
+    touying-slide(
+      self: self,
+      components.adaptive-columns(
+        text(
+          weight: "medium",
+          size: 1.2em,
+          components.custom-progressive-outline(
+            depth: 1,
+            alpha: 30%,
+            indent: (0em,),
+            vspace: (.5em,),
+            numbered: (true,),
+          ),
+        ),
+      ),
+    )
   } else if self.store.new-section-style == "title" {
     let body = [
       #set align(center + horizon)
@@ -258,7 +316,7 @@
           },
         ),
       )
-      place(bottom + right, display-logos(self.store.logos, self.store.num-logos-per-row))
+      place(bottom + right, display-logos(self.store.partner-logos, self.store.num-logos-per-row))
     },
   )
 })
@@ -268,13 +326,15 @@
 //
 // - aspect-ratio (string): The aspect ratio of the slides. Either "4-3" or "16-9". Defailt is "16-9".
 //
+// - language (string): Language for the text ("en", "fr", etc.).
+//
 // - footer (string): Content of the footer. Either the "conference", "author" or "institution". Default is "institution".
 //
 // - outline-title (content | string): Title for the outline slides. Used for the outline-slide() function and the new-section-slide() with the "outline" option.
 //
 // - new-section-style (str | none): New section slide type. Either "outline", "title" or none. Default is none.
 //
-// - logos (array): Array of images (logos) to add to the title slide and end slide.
+// - partner-logos (array): Array of images (logos) to add to the title slide and end slide.
 //
 // - num-logos-per-row (int): Number of logos per row on the title slide and end slide.
 //
@@ -283,10 +343,11 @@
 // - args: Config dictionaries and other arguments for the touying-slides function.
 #let qiqss-theme(
   aspect-ratio: "16-9",
+  language: "fr",
   footer: "conference",
   outline-title: "Presentation outline",
   new-section-style: none,
-  logos: (),
+  partner-logos: (),
   num-logos-per-row: 4,
   heading-numbering: "1.",
   ..args,
@@ -298,9 +359,14 @@
   if new-section-style not in ("outline", "title", none) {
     panic("Either 'outline', 'title' or none")
   }
-  set text(font: "IBM Plex Sans", size: 16pt)
+  set text(font: "IBM Plex Sans", size: 16pt, lang: language)
   show math.equation: set text(font: "New Computer Modern Math")
   show heading.where(level: 1): set heading(numbering: heading-numbering)
+  show outline.entry: it => {
+    let loc = it.element.location()
+    let num = context counter(heading).at(loc).at(0)
+    [#v(.5em)#num.#h(.3em)#it.body()]
+  }
   show: touying-slides.with(
     config-page(
       paper: "presentation-" + aspect-ratio,
@@ -325,7 +391,7 @@
       footer: footer,
       outline-title: outline-title,
       new-section-style: new-section-style,
-      logos: logos,
+      partner-logos: partner-logos,
       num-logos-per-row: num-logos-per-row,
     ),
     ..args,

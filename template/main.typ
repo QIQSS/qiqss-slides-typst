@@ -1,4 +1,4 @@
-#import "lib.typ": *
+#import "../lib.typ": *
 
 #show: qiqss-theme.with(
   aspect-ratio: "16-9",
@@ -14,8 +14,8 @@
     conference: [Conference Lambda],
   ),
   logos: (
-    image("assets/UdeS_logo_h_rgb.svg", height: 2em),
-    image("assets/institut-quantique-STD-degrade.svg", height: 2em),
+    image("../assets/UdeS_logo_h_rgb.svg", height: 2em),
+    image("../assets/institut-quantique-STD-degrade.svg", height: 2em),
   ),
   // num-logos-per-row: 4,
 )
