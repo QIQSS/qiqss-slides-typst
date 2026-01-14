@@ -145,7 +145,6 @@
   self = utils.merge-dicts(
     self,
     config-page(
-      fill: self.colors.neutral-light,
       header: header,
       margin: (top: 5em, left: 2.5em, right: 0em, bottom: 0em),
     ),

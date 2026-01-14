@@ -13,7 +13,7 @@
     institution: [Institution],
     conference: [Conference Lambda],
   ),
-  logos: (
+  partner-logos: (
     image("../assets/UdeS_logo_h_rgb.svg", height: 2em),
     image("../assets/institut-quantique-STD-degrade.svg", height: 2em),
   ),
