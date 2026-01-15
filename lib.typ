@@ -179,6 +179,7 @@
     config-page(
       fill: self.colors.neutral-light,
       header: header,
+      header-ascent: 20%,
     ),
     config-common(
       freeze-slide-counter: true,
