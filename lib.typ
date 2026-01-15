@@ -229,6 +229,7 @@
       config-page(
         fill: self.colors.neutral-light,
         header: header,
+        header-ascent: 20%,
       ),
       config-common(
         freeze-slide-counter: true,
@@ -338,7 +339,7 @@
 //
 // - num-logos-per-row (int): Number of logos per row on the title slide and end slide.
 //
-// - heading-numbering (string): Heading numbering format.
+// - section-numbering (string): Section numbering format.
 //
 // - args: Config dictionaries and other arguments for the touying-slides function.
 #let qiqss-theme(
@@ -349,19 +350,19 @@
   new-section-style: none,
   partner-logos: (),
   num-logos-per-row: 4,
-  heading-numbering: "1.",
+  section-numbering: "1.",
   ..args,
   body,
 ) = {
   if footer not in ("author", "institution", "conference") {
-    panic("Either 'author' or 'institution'")
+    panic("Either 'author', 'institution' or 'conference'")
   }
   if new-section-style not in ("outline", "title", none) {
     panic("Either 'outline', 'title' or none")
   }
   set text(font: "IBM Plex Sans", size: 16pt, lang: language)
   show math.equation: set text(font: "New Computer Modern Math")
-  show heading.where(level: 1): set heading(numbering: heading-numbering)
+  show heading.where(level: 1): set heading(numbering: section-numbering)
   show outline.entry: it => {
     let loc = it.element.location()
     let num = context counter(heading).at(loc).at(0)
