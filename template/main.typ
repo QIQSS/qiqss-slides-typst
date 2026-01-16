@@ -17,11 +17,8 @@
     logo: image("../assets/QIQSS_logo_v3.svg", height: 1em), // this is the default logo shown
   ),
   // The partner-logos are the logos other than the group's logo (university logo, IQ, financing institutions...)
-  partner-logos: (
-    image("../assets/UdeS_logo_h_rgb.svg", height: 2em),
-    image("../assets/institut-quantique-STD-degrade.svg", height: 2em),
-  ),
-  num-logos-per-row: 4, // Number of logos per rows for the partner-logos, default is 4
+  // partner-logos: (),
+  // num-logos-per-row: 4, // Number of logos per rows for the partner-logos, default is 4
 )
 
 #title-slide()
