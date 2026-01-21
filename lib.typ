@@ -368,6 +368,8 @@
     let num = context counter(heading).at(loc).at(0)
     [#v(.5em)#num.#h(.3em)#it.body()]
   }
+  show footnote.entry: set text(size: .75em)
+  set footnote.entry(separator: none, indent: 0em)
   show: touying-slides.with(
     config-page(
       paper: "presentation-" + aspect-ratio,
