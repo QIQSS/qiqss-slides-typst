@@ -58,7 +58,8 @@
     show: pad.with(.7em)
     grid(
       align: (left, right),
-      columns: (1fr, 1fr),
+      columns: (1fr, auto),
+      column-gutter: 2em,
       utils.display-current-heading(
         level: 2,
       ),
