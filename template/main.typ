@@ -19,6 +19,8 @@
   // The partner-logos are the logos other than the group's logo (university logo, IQ, financing institutions...)
   // partner-logos: (),
   // num-logos-per-row: 4, // Number of logos per rows for the partner-logos, default is 4
+  // Optional different logo for slide header. This is the default.
+  dark-bg-logo: image("../assets/QIQSS_logo_v3_white.svg", height: 1em),
 )
 
 #title-slide()

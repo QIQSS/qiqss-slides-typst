@@ -54,8 +54,8 @@
 #let slide(title: auto, ..args) = touying-slide-wrapper(self => {
   let header(self) = {
     set align(horizon)
-    set text(size: 1.5em)
-    show: pad.with(.7em)
+    set text(size: 1.5em, fill: white, weight: "medium")
+    show: components.cell.with(fill: self.colors.primary, inset: (x: .75em))
     grid(
       align: (left, right),
       columns: (1fr, auto),
@@ -63,19 +63,20 @@
       utils.display-current-heading(
         level: 2,
       ),
-      if self.info.logo != none {
+      if self.store.dark-bg-logo != none {
+        self.store.dark-bg-logo
+      } else if self.info.logo != none {
         self.info.logo
       } else {
-        image("assets/QIQSS_logo_v3.svg", height: 1em)
+        image("assets/QIQSS_logo_v3_white.svg", height: 1em)
       },
     )
   }
   let footer(self) = {
     set align(bottom)
-    set text(size: .75em)
-    show: components.cell.with(fill: self.colors.neutral-light)
+    set text(size: .9em)
+    show: components.cell.with(fill: self.colors.neutral-light, inset: .5em)
     set align(horizon)
-    show: pad.with(.5em)
     let footer-content = if self.store.footer == "author" {
       self.info.author
     } else if self.store.footer == "institution" {
@@ -181,6 +182,7 @@
       fill: self.colors.neutral-light,
       header: header,
       header-ascent: 20%,
+      margin: (x: 2.5em),
     ),
     config-common(
       freeze-slide-counter: true,
@@ -231,6 +233,7 @@
         fill: self.colors.neutral-light,
         header: header,
         header-ascent: 20%,
+        margin: (x: 2.5em),
       ),
       config-common(
         freeze-slide-counter: true,
@@ -352,6 +355,7 @@
   partner-logos: (),
   num-logos-per-row: 4,
   section-numbering: "1.",
+  dark-bg-logo: none,
   ..args,
   body,
 ) = {
@@ -374,7 +378,7 @@
   show: touying-slides.with(
     config-page(
       paper: "presentation-" + aspect-ratio,
-      margin: (x: 2.5em, top: 5em, bottom: 1.5em),
+      margin: (x: 1.5em, top: 4em, bottom: 2em),
     ),
     config-common(
       slide-fn: slide,
@@ -397,6 +401,7 @@
       new-section-style: new-section-style,
       partner-logos: partner-logos,
       num-logos-per-row: num-logos-per-row,
+      dark-bg-logo: dark-bg-logo,
     ),
     ..args,
   )
