@@ -52,6 +52,13 @@
 // Slide formatting function. Is not normally used by itself, but is called when inserting a header of level 2.
 // Configuration of the footer content is done in the qiqss-theme show rule with the "footer" argument
 #let slide(title: auto, ..args) = touying-slide-wrapper(self => {
+  let footer-contents = (
+    "email": self.store.email,
+    "institution": self.info.institution,
+    "conference": self.info.conference,
+    "author": self.info.author,
+    "section": utils.display-current-heading(level: 1),
+  )
   let header(self) = {
     set align(horizon)
     set text(size: 1.5em, fill: white, weight: "medium")
@@ -77,18 +84,17 @@
     set text(size: .9em)
     show: components.cell.with(fill: self.colors.neutral-light, inset: .5em)
     set align(horizon)
-    let footer-content = if self.store.footer == "author" {
-      self.info.author
-    } else if self.store.footer == "institution" {
-      self.info.institution
-    } else if self.store.footer == "conference" and "conference" in self.info.keys() {
-      self.info.conference
-    } else { self.info.date }
+    let footer-left-content = if self.store.footer-left != none {
+      footer-contents.at(self.store.footer-left)
+    } else { none }
+    let footer-center-content = if self.store.footer-center != none {
+      footer-contents.at(self.store.footer-center)
+    } else { none }
     grid(
       columns: (1fr, 1fr, 1fr),
       align: (left, center, right),
-      footer-content,
-      utils.display-current-heading(level: 1),
+      footer-left-content,
+      footer-center-content,
       context utils.slide-counter.display() + " / " + utils.last-slide-number,
     )
   }
@@ -333,7 +339,11 @@
 //
 // - language (string): Language for the text ("en", "fr", etc.).
 //
-// - footer (string): Content of the footer. Either the "conference", "author" or "institution". Default is "institution".
+// - footer-left (string): Content of the footer's left block. Either the "conference", "author", "institution", "email" or none. Default is "conference".
+//
+// - footer-center (string): Content of the footer's center block. Either the "section", "email" or none. Default is "conference".
+//
+// - email (string): Corresponding email, optional.
 //
 // - outline-title (content | string): Title for the outline slides. Used for the outline-slide() function and the new-section-slide() with the "outline" option.
 //
@@ -349,7 +359,9 @@
 #let qiqss-theme(
   aspect-ratio: "16-9",
   language: "fr",
-  footer: "conference",
+  footer-left: "conference",
+  footer-center: "section",
+  email: none,
   outline-title: "Presentation outline",
   new-section-style: none,
   partner-logos: (),
@@ -359,8 +371,11 @@
   ..args,
   body,
 ) = {
-  if footer not in ("author", "institution", "conference") {
-    panic("Either 'author', 'institution' or 'conference'")
+  if footer-left not in ("author", "institution", "conference", "email", none) {
+    panic("Either 'author', 'institution', 'conference', 'email' or none")
+  }
+  if footer-center not in ("email", "section", none) {
+    panic("Either 'email', 'section' or none")
   }
   if new-section-style not in ("outline", "title", none) {
     panic("Either 'outline', 'title' or none")
@@ -396,7 +411,9 @@
       tertiary: rgb("#00a759"),
     ),
     config-store(
-      footer: footer,
+      footer-left: footer-left,
+      footer-center: footer-center,
+      email: email,
       outline-title: outline-title,
       new-section-style: new-section-style,
       partner-logos: partner-logos,
