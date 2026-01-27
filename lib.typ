@@ -125,6 +125,11 @@
       image("assets/QIQSS_logo_v3.svg", height: 2.5em)
     }
   }
+  let num-logos-per-row = if type(self.store.num-logos-per-row) == int {
+    self.store.num-logos-per-row
+  } else {
+    self.store.num-logos-per-row.title
+  }
   let body = [
     #v(1fr)
     #text(size: 1.8em, self.info.title)
@@ -148,7 +153,7 @@
     }
     #utils.display-info-date(self)
     #v(.75fr)
-    #place(bottom + right, display-logos(self.store.partner-logos, self.store.num-logos-per-row))
+    #place(bottom + right, display-logos(self.store.partner-logos, num-logos-per-row))
   ]
   self = utils.merge-dicts(
     self,
@@ -296,6 +301,11 @@
 //
 // End slide with some body. The logos are the one specified in the config-store(logos: ()) argument.
 #let end-slide(body) = touying-slide-wrapper(self => {
+  let num-logos-per-row = if type(self.store.num-logos-per-row) == int {
+    self.store.num-logos-per-row
+  } else {
+    self.store.num-logos-per-row.end
+  }
   self = utils.merge-dicts(
     self,
     config-common(freeze-slide-counter: true),
@@ -327,7 +337,7 @@
           },
         ),
       )
-      place(bottom + right, display-logos(self.store.partner-logos, self.store.num-logos-per-row))
+      place(bottom + right, display-logos(self.store.partner-logos, num-logos-per-row))
     },
   )
 })
@@ -351,9 +361,11 @@
 //
 // - partner-logos (array): Array of images (logos) to add to the title slide and end slide.
 //
-// - num-logos-per-row (int): Number of logos per row on the title slide and end slide.
+// - num-logos-per-row (int | dictionnary): Number of logos per row on the title slide and end slide. Can be a dictionnary of (title: int, end: int).
 //
 // - section-numbering (string): Section numbering format.
+//
+// - dark-bg-logo (content): Logo for the dark slide header.
 //
 // - args: Config dictionaries and other arguments for the touying-slides function.
 #let qiqss-theme(
@@ -379,6 +391,9 @@
   }
   if new-section-style not in ("outline", "title", none) {
     panic("Either 'outline', 'title' or none")
+  }
+  if type(num-logos-per-row) not in (int, dictionary) {
+    panic("Either integer or array of the shape (title: int, end: int)")
   }
   set text(font: "IBM Plex Sans", size: 16pt, lang: language)
   show math.equation: set text(font: "New Computer Modern Math")
