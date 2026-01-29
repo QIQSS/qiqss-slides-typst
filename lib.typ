@@ -2,8 +2,21 @@
 #import "@preview/pinit:0.2.2": *
 
 
-// Annotating
-#let annotate(pin, pos: bottom + right, body-pos: right, body) = context {
+/// This function helps annotate stuff.
+///
+/// -> context
+#let annotate(
+  /// The pin number.
+  /// -> int
+  pin,
+  /// Positionning of the annotation.
+  /// -> alignment
+  pos: bottom + right,
+  /// Positionning of the body with respect to the arrow.
+  /// -> alignment
+  body-pos: right,
+  body,
+) = context {
   let body-width = measure(body).width
   pinit-point-from(
     pin,
@@ -18,7 +31,16 @@
 }
 
 
-// Colors
+/// Those are some predefined colors.
+///
+/// ```typst
+/// #let colors = (
+///   qiqss-blue: rgb("#0c287b"),
+///   udes-green: rgb("#00a759"),
+/// )
+/// ```
+///
+/// -> dict
 #let colors = (
   qiqss-blue: rgb("#0c287b"),
   udes-green: rgb("#00a759"),
@@ -111,10 +133,10 @@
 })
 
 
-// Title slide formatter
-//
-// The information presented on the title slide is specified using the
-// config-info dictionnary in the qiqss-theme function.
+/// Adds the title slide.
+///
+/// The information presented on the title slide is specified using the
+/// `config-info` dictionnary in the `qiqss-theme` function.
 #let title-slide() = touying-slide-wrapper(self => {
   let header = {
     set align(top)
@@ -167,9 +189,7 @@
 })
 
 
-// Outline slide
-//
-// Adds a slide showing the outline of the sections of the presentation
+/// Adds a slide showing the outline of the sections of the presentation
 #let outline-slide() = touying-slide-wrapper(self => {
   let header(self) = {
     set align(horizon)
@@ -212,14 +232,12 @@
 })
 
 
-// New section slide
-//
-// There are 3 options :
-// 1. The progressive outline showing the current slide
-// 2. A simple slide with the title of the section
-// 3. No slide
-//
-// This option is specified by the new-section-style argument of the qiqss-theme function.
+/// There are 3 options :
+/// 1. The progressive outline showing the current slide
+/// 2. A simple slide with the title of the section
+/// 3. No slide for a new section
+///
+/// This option is specified by the `new-section-style` argument of the `qiqss-theme` function.
 #let new-section-slide(level) = touying-slide-wrapper(self => {
   if self.store.new-section-style == "outline" {
     let header(self) = {
@@ -297,10 +315,12 @@
 })
 
 
-// End of presentation slide
-//
-// End slide with some body. The logos are the one specified in the config-store(logos: ()) argument.
-#let end-slide(body) = touying-slide-wrapper(self => {
+/// End slide with some body. The logos are the one specified in the `config-store(logos: ())` argument.
+#let end-slide(
+  /// Content of the end-of-presentation slide. The content is centered in the top half of the slide.
+  /// -> content
+  body,
+) = touying-slide-wrapper(self => {
   let num-logos-per-row = if type(self.store.num-logos-per-row) == int {
     self.store.num-logos-per-row
   } else {
@@ -343,43 +363,44 @@
 })
 
 
-// QIQSS Theme
-//
-// - aspect-ratio (string): The aspect ratio of the slides. Either "4-3" or "16-9". Defailt is "16-9".
-//
-// - language (string): Language for the text ("en", "fr", etc.).
-//
-// - footer-left (string): Content of the footer's left block. Either the "conference", "author", "institution", "email" or none. Default is "conference".
-//
-// - footer-center (string): Content of the footer's center block. Either the "section", "email" or none. Default is "conference".
-//
-// - email (string): Corresponding email, optional.
-//
-// - outline-title (content | string): Title for the outline slides. Used for the outline-slide() function and the new-section-slide() with the "outline" option.
-//
-// - new-section-style (str | none): New section slide type. Either "outline", "title" or none. Default is none.
-//
-// - partner-logos (array): Array of images (logos) to add to the title slide and end slide.
-//
-// - num-logos-per-row (int | dictionnary): Number of logos per row on the title slide and end slide. Can be a dictionnary of (title: int, end: int).
-//
-// - section-numbering (string): Section numbering format.
-//
-// - dark-bg-logo (content): Logo for the dark slide header.
-//
-// - args: Config dictionaries and other arguments for the touying-slides function.
+/// QIQSS Theme show rule.
+///
+/// -> none
 #let qiqss-theme(
+  /// The aspect ratio of the slides. Either "4-3" or "16-9". Defailt is "16-9".
+  /// -> str
   aspect-ratio: "16-9",
+  /// Language for the text ("en", "fr", etc.).
+  /// -> str
   language: "fr",
+  /// Content of the footer's left block. Either the "conference", "author", "institution", "email" or none. Default is "conference".
+  /// -> str | none
   footer-left: "conference",
+  /// Content of the footer's center block. Either the "section", "email" or none. Default is "conference".
+  /// -> str | none
   footer-center: "section",
+  /// Corresponding email.
+  /// -> str | none
   email: none,
+  /// Title for the outline slides. Used for the outline-slide() function and the new-section-slide() with the "outline" option.
+  /// -> content | str
   outline-title: "Presentation outline",
+  /// New section slide type. Either "outline", "title" or none.
+  /// -> str | none
   new-section-style: none,
+  /// Array of images (logos) to add to the title slide and end slide.
+  /// -> array
   partner-logos: (),
+  /// Number of logos per row on the title slide and end slide. Can be a dictionnary of (title: int, end: int).
+  /// -> int | dictionary
   num-logos-per-row: 4,
+  /// Section numbering format.
+  /// -> str | function
   section-numbering: "1.",
+  /// Logo for the dark slide header.
+  /// -> content | none
   dark-bg-logo: none,
+  /// Config dictionaries and other arguments for the touying-slides function.
   ..args,
   body,
 ) = {
