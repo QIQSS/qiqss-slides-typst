@@ -337,7 +337,6 @@
   touying-slide(
     self: self,
     {
-      set align(center)
       text(fill: white, size: 1.5em, body)
       place(
         top,
@@ -348,16 +347,15 @@
             (colors.qiqss-blue.lighten(50%), 100%),
             angle: -45deg,
           ),
-          radius: (bottom: 1em),
           width: 100%,
-          height: 50%,
+          height: 90%,
+          inset: 1em,
           {
-            set align(horizon)
-            text(fill: white, size: 1.4em, body)
+            text(fill: white, size: 1.1em, body)
           },
         ),
       )
-      place(bottom + right, display-logos(self.store.partner-logos, num-logos-per-row))
+      place(bottom + center, display-logos(self.store.partner-logos, num-logos-per-row))
     },
   )
 })
