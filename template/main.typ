@@ -1,4 +1,4 @@
-#import "@local/qiqss-slides-typst:0.2.3": *
+#import "@local/qiqss-slides-typst:0.2.4": *
 
 #show: qiqss-theme.with(
   aspect-ratio: "16-9", // "16-9" or "4-3"

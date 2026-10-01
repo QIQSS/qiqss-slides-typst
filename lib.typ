@@ -1,4 +1,4 @@
-#import "@preview/touying:0.6.1": *
+#import "@preview/touying:0.8.0": *
 #import "@preview/pinit:0.2.2": *
 
 
